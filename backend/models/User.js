@@ -1,0 +1,45 @@
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+
+const UserSchema = new mongoose.Schema({
+    username: {
+        type: String,
+        required: [true, 'Nazwa użytkownika jest wymagana'],
+        unique: true,
+        trim: true
+    },
+    email: {
+        type: String,
+        required: [true, 'Email jest wymagany'],
+        unique: true,
+        lowercase: true,
+        trim: true,
+        match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Podaj poprawny adres email']
+    },
+    password: {
+        type: String,
+        required: [true, 'Hasło jest wymagane'],
+        minlength: [6, 'Hasło musi mieć co najmniej 6 znaków'],
+        select: false // Nie zwracaj hasła w zapytaniach domyślnie
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
+    }
+});
+
+// Haszowanie hasła przed zapisem
+UserSchema.pre('save', async function(next) {
+    if (!this.isModified('password')) {
+        next();
+    }
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+});
+
+// Metoda do sprawdzania hasła
+UserSchema.methods.matchPassword = async function(enteredPassword) {
+    return await bcrypt.compare(enteredPassword, this.password);
+};
+
+module.exports = mongoose.model('User', UserSchema);
