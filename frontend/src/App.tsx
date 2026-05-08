@@ -7,6 +7,7 @@ import CreateProjectPage from './pages/CreateProjectPage';
 import ProjectDetailsPage from './pages/ProjectDetailsPage';
 import EditProjectPage from './pages/EditProjectPage';
 import ProfilePage from './pages/ProfilePage';
+import MyProjectsPage from './pages/MyProjectsPage';
 import './App.css';
 
 // Komponent chroniący trasy
@@ -50,6 +51,7 @@ const Navbar = () => {
                 </div>
                 <div className="dropdown-menu">
                   <Link to="/profile" className="dropdown-item">👤 Twój profil</Link>
+                  <Link to="/my-projects" className="dropdown-item">📁 Moje projekty</Link>
                   <div className="dropdown-divider"></div>
                   <button onClick={handleLogout} className="dropdown-item" style={{ color: '#dc2626' }}>
                     🚪 Wyloguj się
@@ -103,6 +105,9 @@ const AppContent = () => {
             } />
             <Route path="/profile" element={
               <ProtectedRoute><ProfilePage /></ProtectedRoute>
+            } />
+            <Route path="/my-projects" element={
+              <ProtectedRoute><MyProjectsPage /></ProtectedRoute>
             } />
             
             <Route path="/projects/:id" element={<ProjectDetailsPage />} />

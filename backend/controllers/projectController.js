@@ -122,3 +122,14 @@ exports.deleteProject = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+
+// @desc    Pobierz projekty zalogowanego użytkownika
+// @route   GET /api/projects/user/me
+exports.getUserProjects = async (req, res) => {
+    try {
+        const projects = await Project.find({ author: req.user._id }).sort({ createdAt: -1 });
+        res.json(projects);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};

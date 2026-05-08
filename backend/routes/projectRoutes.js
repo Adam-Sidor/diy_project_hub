@@ -7,7 +7,8 @@ const {
     getProjectById,
     createProject,
     updateProject,
-    deleteProject
+    deleteProject,
+    getUserProjects
 } = require('../controllers/projectController');
 const {
     addComment,
@@ -23,6 +24,7 @@ const upload = multer({ storage });
 
 // --- ŚCIEŻKI PROJEKTÓW ---
 router.get('/', getProjects);
+router.get('/user/me', protect, getUserProjects);
 router.get('/:id', getProjectById);
 
 // Obsługa wielu zdjęć (zwiększony limit do 10)
