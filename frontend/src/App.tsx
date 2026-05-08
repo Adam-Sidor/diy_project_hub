@@ -1,13 +1,37 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import CreateProjectPage from './pages/CreateProjectPage';
+import ProjectDetailsPage from './pages/ProjectDetailsPage';
+import EditProjectPage from './pages/EditProjectPage';
+import ProfilePage from './pages/ProfilePage';
 import './App.css';
+
+// Komponent chroniący trasy
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return <div className="loader-centered">Trwa ładowanie...</div>;
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
+};
 
 const Navbar = () => {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <nav className="navbar">
@@ -19,8 +43,19 @@ const Navbar = () => {
           {user ? (
             <>
               <Link to="/create" className="btn btn-sm btn-primary">Dodaj projekt</Link>
-              <span className="user-info">Cześć, <strong>{user.username}</strong></span>
-              <button onClick={logout} className="btn btn-sm btn-outline">Wyloguj</button>
+              
+              <div className="user-menu-container">
+                <div className="user-trigger">
+                  <span>Cześć, <strong>{user.username}</strong> ▼</span>
+                </div>
+                <div className="dropdown-menu">
+                  <Link to="/profile" className="dropdown-item">👤 Twój profil</Link>
+                  <div className="dropdown-divider"></div>
+                  <button onClick={handleLogout} className="dropdown-item" style={{ color: '#dc2626' }}>
+                    🚪 Wyloguj się
+                  </button>
+                </div>
+              </div>
             </>
           ) : (
             <>
@@ -58,7 +93,19 @@ const AppContent = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/create" element={<CreateProjectPage />} />
+            
+            {/* Chronione trasy */}
+            <Route path="/create" element={
+              <ProtectedRoute><CreateProjectPage /></ProtectedRoute>
+            } />
+            <Route path="/edit/:id" element={
+              <ProtectedRoute><EditProjectPage /></ProtectedRoute>
+            } />
+            <Route path="/profile" element={
+              <ProtectedRoute><ProfilePage /></ProtectedRoute>
+            } />
+            
+            <Route path="/projects/:id" element={<ProjectDetailsPage />} />
           </Routes>
         </main>
         <Footer />

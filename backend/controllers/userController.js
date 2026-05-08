@@ -62,3 +62,47 @@ exports.loginUser = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+// @desc    Pobierz profil użytkownika
+// @route   GET /api/users/profile
+exports.getUserProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id).select('-password');
+        if (user) {
+            res.json(user);
+        } else {
+            res.status(404).json({ message: 'Użytkownik nie znaleziony' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Aktualizuj profil użytkownika
+// @route   PUT /api/users/profile
+exports.updateUserProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user._id);
+
+        if (user) {
+            user.username = req.body.username || user.username;
+            user.email = req.body.email || user.email;
+            
+            if (req.body.password) {
+                user.password = req.body.password;
+            }
+
+            const updatedUser = await user.save();
+            res.json({
+                _id: updatedUser._id,
+                username: updatedUser.username,
+                email: updatedUser.email
+                // Tokena nie regenerujemy, chyba że zmienimy id
+            });
+        } else {
+            res.status(404).json({ message: 'Użytkownik nie znaleziony' });
+        }
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};

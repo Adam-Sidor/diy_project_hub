@@ -302,6 +302,73 @@ body {
   color: var(--primary-solid);
 }
 
+/* --- USER DROPDOWN --- */
+.user-menu-container {
+  position: relative;
+  display: inline-block;
+}
+
+.user-trigger {
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 10px;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.user-trigger:hover {
+  background: #f1f5f9;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  width: 190px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: var(--shadow-hover);
+  padding: 8px;
+  display: none;
+  z-index: 1000;
+  animation: fadeInUp 0.2s ease forwards;
+}
+
+.user-menu-container:hover .dropdown-menu {
+  display: block;
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 10px 12px;
+  text-align: left;
+  text-decoration: none;
+  color: var(--text-main);
+  font-size: 0.9rem;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: background 0.2s;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: #eff6ff;
+  color: var(--primary-solid);
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 6px 0;
+}
+
 /* --- ANIMACJE DLA KART --- */
 .project-card:nth-child(1) { animation-delay: 0.05s; }
 .project-card:nth-child(2) { animation-delay: 0.1s; }

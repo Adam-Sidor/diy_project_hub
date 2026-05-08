@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { apiFetch } from '../services/api';
 import type { Project } from '../types/index';
 
@@ -51,7 +52,9 @@ const HomePage = () => {
                                     ))}
                                 </div>
                                 <div style={{ marginTop: '20px' }}>
-                                    <button className="btn btn-outline" style={{ width: '100%' }}>Szczegóły</button>
+                                    <Link to={`/projects/${project._id}`} className="btn btn-outline" style={{ width: '100%', textAlign: 'center' }}>
+                                        Szczegóły
+                                    </Link>
                                 </div>
                             </div>
                         </div>

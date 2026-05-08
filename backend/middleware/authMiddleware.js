@@ -18,16 +18,16 @@ const protect = async (req, res, next) => {
             // Pobranie danych użytkownika z bazy (bez hasła) i dołączenie do req
             req.user = await User.findById(decoded.id).select('-password');
 
-            next();
+            return next();
         } catch (error) {
-            console.error(error);
-            res.status(401).json({ message: 'Brak autoryzacji, błędny token' });
+            console.error('Błąd autoryzacji:', error.message);
+            return res.status(401).json({ message: 'Brak autoryzacji, błędny token' });
         }
     }
 
     if (!token) {
-        res.status(401).json({ message: 'Brak autoryzacji, brak tokenu' });
+        return res.status(401).json({ message: 'Brak autoryzacji, brak tokenu' });
     }
 };
 
-module.exports = { protect };
+module.exports = protect;

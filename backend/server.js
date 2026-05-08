@@ -17,7 +17,6 @@ app.use(cors());
 app.use(express.json());
 
 // Udostępnienie folderu 'uploads' publicznie pod adresem /uploads
-// Dzięki temu React będzie mógł wyświetlić zdjęcie przez <img src="http://localhost:5000/uploads/nazwa.jpg" />
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // --- KONFIGURACJA MULTER (PLIKI) ---
@@ -56,5 +55,4 @@ app.use((req, res) => {
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
     console.log(`🚀 Serwer działa na porcie ${PORT}`);
-    console.log(`📁 Zdjęcia dostępne w: http://localhost:${PORT}/uploads/`);
 });
