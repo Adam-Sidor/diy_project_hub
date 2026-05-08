@@ -32,7 +32,7 @@ exports.createProject = async (req, res) => {
             title,
             description,
             image: req.file ? `/uploads/${req.file.filename}` : '',
-            components: components ? components.split(',') : [],
+            components: Array.isArray(components) ? components : (components ? components.split(',') : []),
             author: req.user._id
         });
         const saved = await newProject.save();

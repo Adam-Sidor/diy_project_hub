@@ -3,6 +3,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import CreateProjectPage from './pages/CreateProjectPage';
 import './App.css';
 
 const Navbar = () => {
@@ -17,7 +18,8 @@ const Navbar = () => {
         <div className="nav-links">
           {user ? (
             <>
-              <span className="user-info">Zalogowany jako: <strong>{user.username}</strong></span>
+              <Link to="/create" className="btn btn-sm btn-primary">Dodaj projekt</Link>
+              <span className="user-info">Cześć, <strong>{user.username}</strong></span>
               <button onClick={logout} className="btn btn-sm btn-outline">Wyloguj</button>
             </>
           ) : (
@@ -56,6 +58,7 @@ const AppContent = () => {
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
+            <Route path="/create" element={<CreateProjectPage />} />
           </Routes>
         </main>
         <Footer />
