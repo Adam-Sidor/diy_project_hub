@@ -99,7 +99,7 @@ const CreateProjectPage = () => {
                 </div>
 
                 <div className="form-input-group">
-                    <label>Zdjęcia projektu (możesz wybrać kilka)</label>
+                    <label>Zdjęcia projektu (możesz wybrać kilka, max 10)</label>
                     <input
                         type="file"
                         accept="image/*"
