@@ -24,8 +24,11 @@ const upload = multer({ storage });
 // --- ŚCIEŻKI PROJEKTÓW ---
 router.get('/', getProjects);
 router.get('/:id', getProjectById);
-router.post('/', protect, upload.single('image'), createProject);
-router.put('/:id', protect, updateProject);
+
+// Obsługa wielu zdjęć (zwiększony limit do 10)
+router.post('/', protect, upload.array('images', 10), createProject);
+router.put('/:id', protect, upload.array('images', 10), updateProject);
+
 router.delete('/:id', protect, deleteProject);
 
 // --- ŚCIEŻKI KOMENTARZY ---

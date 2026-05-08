@@ -16,34 +16,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Udostępnienie folderu 'uploads' publicznie pod adresem /uploads
+// Udostępnienie folderu 'uploads' publicznie
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// --- KONFIGURACJA MULTER (PLIKI) ---
-const multer = require('multer');
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads/'); // Pliki trafią tutaj
-    },
-    filename: (req, file, cb) => {
-        // Generowanie unikalnej nazwy: timestamp-oryginalnanazwa
-        cb(null, Date.now() + '-' + file.originalname);
-    }
-});
-const upload = multer({ storage: storage });
 
 // --- IMPORT ROUTERÓW ---
 const projectRoutes = require('./routes/projectRoutes');
 const userRoutes = require('./routes/userRoutes');
 
 // --- ŚCIEŻKI (ROUTES) ---
-
-// Specjalny endpoint do uploadu zdjęcia
-app.post('/api/upload', upload.single('image'), (req, res) => {
-    if (!req.file) return res.status(400).json({ message: 'Nie przesłano pliku' });
-    res.status(201).json({ url: `/uploads/${req.file.filename}` });
-});
-
 app.use('/api/projects', projectRoutes);
 app.use('/api/users', userRoutes);
 

@@ -10,12 +10,14 @@ const ProjectDetailsPage = () => {
     const { user } = useAuth();
     const [project, setProject] = useState<Project | null>(null);
     const [loading, setLoading] = useState(true);
+    const [activeImage, setActiveImage] = useState(0);
 
     useEffect(() => {
         const fetchProject = async () => {
             try {
                 const data = await apiFetch(`/projects/${id}`);
                 setProject(data);
+                setActiveImage(data.mainImageIndex || 0);
             } catch (err) {
                 console.error(err);
                 navigate('/');
@@ -41,15 +43,45 @@ const ProjectDetailsPage = () => {
     if (!project) return <div className="container">Projekt nie znaleziony.</div>;
 
     const isAuthor = user && project.author._id === user._id;
+    const hasImages = project.images && project.images.length > 0;
 
     return (
         <div className="container" style={{ padding: '40px 0' }}>
             <div className="project-details-card" style={{ background: 'white', borderRadius: '24px', overflow: 'hidden', boxShadow: 'var(--shadow)' }}>
-                <div style={{ height: '400px', background: '#f1f5f9' }}>
-                    {project.image ? (
-                        <img src={`http://localhost:8080${project.image}`} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    ) : (
-                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: '#94a3b8' }}>Brak zdjęcia</div>
+                {/* GALERIA ZDJĘĆ */}
+                <div style={{ background: '#f8fafc', borderBottom: '1px solid var(--border)' }}>
+                    <div style={{ height: '500px', width: '100%', position: 'relative' }}>
+                        {hasImages ? (
+                            <img 
+                                src={`http://localhost:8080${project.images[activeImage]}`} 
+                                alt={project.title} 
+                                style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+                            />
+                        ) : (
+                            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', color: '#94a3b8' }}>Brak zdjęć</div>
+                        )}
+                    </div>
+                    
+                    {hasImages && project.images.length > 1 && (
+                        <div style={{ display: 'flex', gap: '10px', padding: '15px', justifyContent: 'center', background: 'white' }}>
+                            {project.images.map((img, idx) => (
+                                <img 
+                                    key={idx}
+                                    src={`http://localhost:8080${img}`}
+                                    alt={`Miniatura ${idx + 1}`}
+                                    onClick={() => setActiveImage(idx)}
+                                    style={{ 
+                                        width: '60px', 
+                                        height: '60px', 
+                                        objectFit: 'cover', 
+                                        borderRadius: '8px', 
+                                        cursor: 'pointer',
+                                        border: activeImage === idx ? '2px solid var(--primary-solid)' : '2px solid transparent',
+                                        transition: '0.2s'
+                                    }}
+                                />
+                            ))}
+                        </div>
                     )}
                 </div>
                 
@@ -69,7 +101,7 @@ const ProjectDetailsPage = () => {
 
                     <div style={{ marginBottom: '40px' }}>
                         <h3 style={{ marginBottom: '15px', color: 'var(--text-main)' }}>O projekcie</h3>
-                        <p style={{ whiteSpace: 'pre-wrap', fontSize: '1.1rem', color: 'var(--text-muted)' }}>{project.description}</p>
+                        <p style={{ whiteSpace: 'pre-wrap', fontSize: '1.1rem', color: 'var(--text-muted)', lineHeight: '1.6' }}>{project.description}</p>
                     </div>
 
                     <div>

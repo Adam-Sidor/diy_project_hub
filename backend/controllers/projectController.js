@@ -27,11 +27,16 @@ exports.getProjectById = async (req, res) => {
 // @route   POST /api/projects
 exports.createProject = async (req, res) => {
     try {
-        const { title, description, components } = req.body;
+        const { title, description, components, mainImageIndex } = req.body;
+        
+        // Obsługa wielu plików
+        const imagePaths = req.files ? req.files.map(file => `/uploads/${file.filename}`) : [];
+
         const newProject = new Project({
             title,
             description,
-            image: req.file ? `/uploads/${req.file.filename}` : '',
+            images: imagePaths,
+            mainImageIndex: mainImageIndex || 0,
             components: Array.isArray(components) ? components : (components ? components.split(',') : []),
             author: req.user._id
         });
@@ -54,8 +59,34 @@ exports.updateProject = async (req, res) => {
             return res.status(401).json({ message: 'Brak uprawnień do edycji tego projektu' });
         }
 
-        project = await Project.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        res.json(project);
+        // Aktualizacja pól tekstowych
+        const { title, description, components, mainImageIndex, existingImages } = req.body;
+        
+        if (title) project.title = title;
+        if (description) project.description = description;
+        if (mainImageIndex !== undefined) project.mainImageIndex = Number(mainImageIndex);
+        
+        if (components) {
+            project.components = Array.isArray(components) ? components : (components ? components.split(',') : []);
+        }
+
+        // Obsługa usuwania zdjęć (aktualizacja listy istniejących)
+        if (existingImages) {
+            try {
+                project.images = JSON.parse(existingImages);
+            } catch (e) {
+                // Jeśli nie jest JSONem (np. pusta tablica), ignorujemy błąd
+            }
+        }
+
+        // Dodawanie nowych zdjęć
+        if (req.files && req.files.length > 0) {
+            const newImagePaths = req.files.map(file => `/uploads/${file.filename}`);
+            project.images = [...project.images, ...newImagePaths];
+        }
+
+        const saved = await project.save();
+        res.json(saved);
     } catch (err) {
         res.status(400).json({ error: err.message });
     }

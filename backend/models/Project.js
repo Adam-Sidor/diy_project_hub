@@ -10,9 +10,12 @@ const ProjectSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Opis jest wymagany']
     },
-    image: {
-        type: String,
-        required: true // Będziemy tu trzymać np. "/uploads/171517000-arduino.jpg"
+    images: [{
+        type: String // Tablica ścieżek do zdjęć
+    }],
+    mainImageIndex: {
+        type: Number,
+        default: 0
     },
     components: [{
         type: String // Prosta lista części jako tablica stringów

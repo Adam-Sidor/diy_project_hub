@@ -9,7 +9,8 @@ export interface Project {
     _id: string;
     title: string;
     description: string;
-    image: string;
+    images: string[];
+    mainImageIndex: number; // Dodano pole do wyboru zdjęcia głównego
     components: string[];
     author: {
         _id: string;

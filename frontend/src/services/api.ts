@@ -26,7 +26,7 @@ export const apiFetch = async (endpoint: string, options: RequestInit = {}) => {
 };
 
 // Specjalna funkcja do przesyłania plików (FormData nie potrzebuje Content-Type JSON)
-export const apiUpload = async (endpoint: string, formData: FormData) => {
+export const apiUpload = async (endpoint: string, formData: FormData, method: string = 'POST') => {
     const token = localStorage.getItem('token');
     
     const headers: HeadersInit = {};
@@ -35,7 +35,7 @@ export const apiUpload = async (endpoint: string, formData: FormData) => {
     }
 
     const response = await fetch(`${BASE_URL}${endpoint}`, {
-        method: 'POST',
+        method,
         body: formData,
         headers,
     });

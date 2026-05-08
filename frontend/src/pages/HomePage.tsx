@@ -32,8 +32,8 @@ const HomePage = () => {
                     {projects.map((project) => (
                         <div key={project._id} className="project-card">
                             <div className="project-img-wrapper">
-                                {project.image ? (
-                                    <img src={`http://localhost:8080${project.image}`} alt={project.title} />
+                                {project.images && project.images.length > 0 ? (
+                                    <img src={`http://localhost:8080${project.images[project.mainImageIndex || 0]}`} alt={project.title} />
                                 ) : (
                                     <div className="no-image">Brak zdjęcia</div>
                                 )}
@@ -44,7 +44,7 @@ const HomePage = () => {
                                     👤 <strong>{project.author?.username || 'Nieznany'}</strong>
                                 </p>
                                 <p className="description">
-                                    {project.description?.substring(0, 100) || 'Brak opisu'}...
+                                    {project.description?.substring(0, 100) || 'Brak opisu'} {project.description?.length > 100 ? '...' : ''}
                                 </p>
                                 <div className="tags-container">
                                     {project.components?.map((comp, idx) => (
