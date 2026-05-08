@@ -4,7 +4,20 @@ const Project = require('../models/Project');
 // @route   GET /api/projects
 exports.getProjects = async (req, res) => {
     try {
-        const projects = await Project.find().populate('author', 'username');
+        const { search } = req.query;
+        let query = {};
+
+        if (search) {
+            query = {
+                $or: [
+                    { title: { $regex: search, $options: 'i' } },
+                    { description: { $regex: search, $options: 'i' } },
+                    { components: { $regex: search, $options: 'i' } }
+                ]
+            };
+        }
+
+        const projects = await Project.find(query).populate('author', 'username').sort({ createdAt: -1 });
         res.json(projects);
     } catch (err) {
         res.status(500).json({ error: err.message });

@@ -11,6 +11,9 @@ node_modules/
 # User uploads
 backend/uploads/
 
+# Test images
+test_img/
+
 # Build files
 dist/
 build/
