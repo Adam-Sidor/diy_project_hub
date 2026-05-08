@@ -6,11 +6,12 @@ A fully functional web application designed for DIY enthusiasts to share their c
 
 - **User Authentication**: Secure Register and Login system with JWT and password hashing (bcrypt).
 - **Project Management (CRUD)**: Users can create, view, edit, and delete their own projects.
+- **Dedicated "My Projects" Section**: A specialized dashboard for users to manage their personal projects easily.
 - **Image Gallery**: Support for multiple images per project with a user-definable "main image" (cover photo).
 - **Dynamic Search**: Real-time search functionality with debouncing, allowing users to find projects by title, description, or specific components.
 - **Interactive Comments**: Community feedback system where users can comment on projects.
 - **Responsive UI**: Modern, premium design with smooth animations and a mobile-friendly layout.
-- **Protected Routes**: Ensuring that sensitive actions (creating/editing) are only available to authenticated users.
+- **Protected Routes**: Ensuring that sensitive actions (creating/editing/profile) are only available to authenticated users.
 
 ## 🚀 Tech Stack
 
@@ -81,17 +82,17 @@ The application will be available at `http://localhost:5173`.
 ```text
 diy_project_hub/
 ├── backend/
-│   ├── controllers/    # Business logic
-│   ├── models/         # Database schemas (Mongoose)
+│   ├── controllers/    # Business logic (MVC - Controller)
+│   ├── models/         # Database schemas (MVC - Model)
 │   ├── routes/         # API endpoints
-│   ├── middleware/     # Auth and Upload middleware
+│   ├── middleware/     # Auth and Upload (Multer) middleware
 │   └── uploads/        # Stored project images
 ├── frontend/
 │   └── src/
-│       ├── pages/      # View components
-│       ├── services/   # API communication
-│       ├── context/    # Auth state management
-│       ├── types/      # TypeScript definitions
+│       ├── pages/      # View components (HomePage, MyProjects, Profile, etc.)
+│       ├── services/   # API communication layer
+│       ├── context/    # Global Auth state management
+│       ├── types/      # TypeScript interfaces
 │       └── App.tsx     # Routing and core layout
 └── README.md
 ```
